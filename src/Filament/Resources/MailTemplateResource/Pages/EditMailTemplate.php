@@ -4,11 +4,12 @@ namespace Codedor\FilamentMailTemplates\Filament\Resources\MailTemplateResource\
 
 use Codedor\FilamentMailTemplates\Filament\Resources\MailTemplateResource;
 use Codedor\TranslatableTabs\Resources\Traits\HasTranslations;
+use Filament\Actions\LocaleSwitcher;
 use Filament\Resources\Pages\EditRecord;
 
 class EditMailTemplate extends EditRecord
 {
-    use HasTranslations;
+	use EditRecord\Concerns\Translatable;
 
     protected static string $resource = MailTemplateResource::class;
 
@@ -16,4 +17,12 @@ class EditMailTemplate extends EditRecord
     {
         return [];
     }
+
+	protected function getHeaderActions(): array
+	{
+		return [
+			LocaleSwitcher::make(),
+			// ...
+		];
+	}
 }

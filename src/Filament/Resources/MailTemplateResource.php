@@ -2,11 +2,12 @@
 
 namespace Codedor\FilamentMailTemplates\Filament\Resources;
 
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Section;
+use Filament\Resources\Concerns\Translatable;
 use Codedor\FilamentMailTemplates\Filament\Resources\MailTemplateResource\Pages;
 use Codedor\FilamentMailTemplates\Models\MailTemplate;
 use Codedor\FilamentPlaceholderInput\Filament\Forms\Components\PlaceholderInput;
-use Codedor\TranslatableTabs\Forms\TranslatableTabs;
-use Codedor\TranslatableTabs\Tables\LocalesColumn;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
@@ -21,7 +22,9 @@ use FilamentTiptapEditor\TiptapEditor;
 
 class MailTemplateResource extends Resource
 {
-    protected static ?string $model = MailTemplate::class;
+	use Translatable;
+
+	protected static ?string $model = MailTemplate::class;
 
     public static function getNavigationGroup(): ?string
     {
@@ -49,50 +52,58 @@ class MailTemplateResource extends Resource
 
     public static function form(Form $form): Form
     {
+
         return $form->schema([
-            TranslatableTabs::make()
-                ->columnSpan(['lg' => 2])
-                ->icon(false)
-                ->defaultFields([
-                    Placeholder::make('identifier')
-                        ->content(fn (MailTemplate $record) => $record->identifier),
+            Grid::make()
+                ->columns(['lg' => 3])
+                ->schema([
+					Section::make('Info')
+						->columnSpan(2)
+						->schema([
+							Placeholder::make('identifier')
+								->content(fn (MailTemplate $record) => $record->identifier),
 
-                    Placeholder::make('description')
-                        ->content(fn (MailTemplate $record) => $record->description),
+							Placeholder::make('description')
+								->content(fn (MailTemplate $record) => $record->description),
 
-                    Repeater::make('to_email')
-                        ->helperText('If left empty, the sites default e-mail will be used.')
-                        ->label('Target e-mails')
-                        ->hidden(fn (MailTemplate $record) => ! $record->getMailTemplate()->hasTargetField())
-                        ->schema([
-                            Grid::make()->schema([
-                                TextInput::make('email')
-                                    ->required(),
+							Repeater::make('to_email')
+								->helperText('If left empty, the sites default e-mail will be used.')
+								->label('Target e-mails')
+								->hidden(fn (MailTemplate $record) => ! $record->getMailTemplate()->hasTargetField())
+								->schema([
+									Grid::make()->schema([
+										TextInput::make('email')
+											->required(),
 
-                                Select::make('type')
-                                    ->required()
-                                    ->options([
-                                        'to' => 'Normal',
-                                        'cc' => 'CC',
-                                        'bcc' => 'BCC',
-                                    ]),
-                            ]),
-                        ]),
+										Select::make('type')
+											->required()
+											->options([
+												'to' => 'Normal',
+												'cc' => 'CC',
+												'bcc' => 'BCC',
+											]),
+									]),
+								]),
+						]),
+					Section::make('template')
+						->heading('Template')
+						->columns(3)->schema([
+						Grid::make(1)
+							->columnSpan(['lg' => 2])
+							->schema([
+								TextInput::make('subject'),
+								//TiptapEditor::make('body'),
+								RichEditor::make('body')->withAI(function (){
+									return "Kan je een voorbeeld mail schrijven voor een algemene e-mail en moeten aansluiten bij de belastingdienstgerelateerde diensten die het portaal aanbiedt. Genereer de template als markdown zonder onderwerp.  en geef alleen de tekst in de markdown terug";
+								}),
+							]),
+
+						PlaceholderInput::make('variables')
+							->linksWith(["subject", "body"])
+							->copyable(),
+					]),
                 ])
-                ->translatableFields(fn (string $locale) => [
-                    Grid::make(3)->schema([
-                        Grid::make(1)
-                            ->columnSpan(['lg' => 2])
-                            ->schema([
-                                TextInput::make('subject'),
-                                TiptapEditor::make('body'),
-                            ]),
 
-                        PlaceholderInput::make('variables')
-                            ->linksWith(["{$locale}.subject", "{$locale}.body"])
-                            ->copyable(),
-                    ]),
-                ]),
         ]);
     }
 
@@ -104,7 +115,7 @@ class MailTemplateResource extends Resource
 
                 TextColumn::make('description'),
 
-                LocalesColumn::make('online'),
+                //LocalesColumn::make('online'),
             ])
             ->actions([
                 Tables\Actions\Action::make('preview')

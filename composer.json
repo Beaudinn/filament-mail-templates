@@ -12,7 +12,6 @@
         "php": "^8.2",
         "awcodes/filament-tiptap-editor": "^3.0",
         "codedor/filament-link-picker": "^0.1",
-        "codedor/filament-placeholder-input": "^0.2",
         "codedor/filament-translatable-tabs": "^0.1",
         "codedor/laravel-locale-collection": "^0.0.3",
         "filament/filament": "^3.0",

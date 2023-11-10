@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class MailHistory extends Model
 {
+
     protected $table = 'mail_history';
 
     protected $fillable = [
