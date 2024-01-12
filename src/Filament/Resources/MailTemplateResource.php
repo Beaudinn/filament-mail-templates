@@ -99,6 +99,7 @@ class MailTemplateResource extends Resource
 							]),
 
 						PlaceholderInput::make('variables')
+							->name('variables')
 							->linksWith(["subject", "body"])
 							->copyable(),
 					]),

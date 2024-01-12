@@ -32,7 +32,6 @@ class MailTemplate extends Model
     protected $translatable = [
         'subject',
         'body',
-        'online',
     ];
 
     protected $casts = [
@@ -44,7 +43,7 @@ class MailTemplate extends Model
         return MailTemplateCollection::getTemplate($this->identifier);
     }
 
-    public function getPlaceholderVariables(): array
+    public function getPlaceholderVariables($name = null): array
     {
         $model = $this->getMailTemplate()->getResourceType();
 
@@ -52,7 +51,7 @@ class MailTemplate extends Model
             return [];
         }
 
-        return (new $model)->getPlaceholderVariables();
+        return (new $model)->getPlaceholderVariables($name);
     }
 
     public function getDescriptionAttribute(): ?string
