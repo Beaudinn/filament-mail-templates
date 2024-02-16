@@ -92,10 +92,10 @@ class MailTemplateResource extends Resource
 							->columnSpan(['lg' => 2])
 							->schema([
 								TextInput::make('subject'),
-								//TiptapEditor::make('body'),
-								RichEditor::make('body')->withAI(function (){
-									return "Kan je een voorbeeld mail schrijven voor een algemene e-mail en moeten aansluiten bij de belastingdienstgerelateerde diensten die het portaal aanbiedt. Genereer de template als markdown zonder onderwerp.  en geef alleen de tekst in de markdown terug";
-								}),
+								TiptapEditor::make('body'),
+								//RichEditor::make('body')->withAI(function (){
+								//	return "Kan je een voorbeeld mail schrijven voor een algemene e-mail en moeten aansluiten bij de belastingdienstgerelateerde diensten die het portaal aanbiedt. Genereer de template als markdown zonder onderwerp.  en geef alleen de tekst in de markdown terug";
+								//}),
 							]),
 
 						PlaceholderInput::make('variables')
