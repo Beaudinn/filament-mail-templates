@@ -19,6 +19,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use FilamentTiptapEditor\TiptapEditor;
+use FilamentTiptapEditor\Enums\TiptapOutput;
 
 class MailTemplateResource extends Resource
 {
@@ -92,7 +93,7 @@ class MailTemplateResource extends Resource
 							->columnSpan(['lg' => 2])
 							->schema([
 								TextInput::make('subject'),
-								TiptapEditor::make('body'),
+								TiptapEditor::make('body')->output(TiptapOutput::Html),
 								//RichEditor::make('body')->withAI(function (){
 								//	return "Kan je een voorbeeld mail schrijven voor een algemene e-mail en moeten aansluiten bij de belastingdienstgerelateerde diensten die het portaal aanbiedt. Genereer de template als markdown zonder onderwerp.  en geef alleen de tekst in de markdown terug";
 								//}),
