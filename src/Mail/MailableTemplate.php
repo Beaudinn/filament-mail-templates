@@ -40,8 +40,14 @@ class MailableTemplate extends Mailable
             }
         }
 
+        if (is_array($this->template->subject)) {
+            $subject = $this->parseVariables(tiptap_converter()->asHTML($this->template->subject));
+        } else {
+            $subject =  $this->parseVariables($this->template->subject);
+        }
+
         return new Envelope(
-            subject: $this->parseVariables($this->template->subject),
+            subject: $subject,
             from: new Address(
                 $this->template->from_email ?? config('mail.from.address'),
                 $this->template->from_name ?? config('mail.from.name'),
@@ -51,8 +57,12 @@ class MailableTemplate extends Mailable
 
     public function content(): Content
     {
-        $body = nl2br($this->parseVariables($this->template->body));
 
+        if (is_array($this->template->body)) {
+            $body = $this->parseVariables(tiptap_converter()->asHTML($this->template->body));
+        } else {
+            $body =  $this->parseVariables($this->template->subject);
+        }
         return new Content(
             view: $this->builder->getView(),
             with: [
@@ -95,7 +105,7 @@ class MailableTemplate extends Mailable
             return $content;
         }
 
-        $data = collect($this->item->getPlaceholderVariables())
+        $data = collect(value: $this->item->getPlaceholderVariables())
             ->mapWithKeys(fn (PlaceholderVariable $value) => [$value->getKey() => $value->getValue()])
             ->toArray();
 
