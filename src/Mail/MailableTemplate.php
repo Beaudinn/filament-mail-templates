@@ -61,7 +61,7 @@ class MailableTemplate extends Mailable
         if (is_array($this->template->body)) {
             $body = $this->parseVariables(tiptap_converter()->asHTML($this->template->body));
         } else {
-            $body =  $this->parseVariables($this->template->subject);
+            $body =  $this->parseVariables($this->template->body);
         }
         return new Content(
             view: $this->builder->getView(),
